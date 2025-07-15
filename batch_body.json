@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "launch_speed": 102.3,
+      "launch_angle": 27,
+      "stand": "R",
+      "p_throws": "L",
+      "pitch_type": "FF",
+      "inning": 7,
+      "month": 8,
+      "balls": 0,
+      "strikes": 1
+    },
+    {
+      "launch_speed": 98.1,
+      "launch_angle": 31,
+      "stand": "L",
+      "p_throws": "R",
+      "pitch_type": "SL",
+      "inning": 5,
+      "month": 4,
+      "balls": 2,
+      "strikes": 2
+    }
+  ]
+}

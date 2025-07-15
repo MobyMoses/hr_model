@@ -1,0 +1,12 @@
+
+pybaseball>=2.2.7
+pandas>=2.0
+numpy
+xgboost>=2.0
+scikit-learn
+joblib
+fastapi
+uvicorn
+requests
+python-multipart
+tqdm
