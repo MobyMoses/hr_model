@@ -5,6 +5,7 @@ import joblib, pandas as pd, shap
 from pydantic import BaseModel
 from utils.request_helper import build_payload
 
+MODEL_VERSION = "2024-wind-v1"
 app = FastAPI(title="HR Probability API")
 MODEL_PATH = "models/hr_model.pkl"
 model = joblib.load("models/hr_model.pkl")
@@ -25,8 +26,8 @@ class RawPA(BaseModel):
 def predict(pa: RawPA):
     features = build_payload("models/hr_model.pkl", **pa.dict())
     proba = model.predict_proba(pd.DataFrame([features]))[:, 1][0]
-    return {"hr_probability": float(proba)}
-
+    return {"hr_probability": float(proba),
+    "model_version": MODEL_VERSION}
 class RawPABatch(BaseModel):
     data: List[RawPA]
 
