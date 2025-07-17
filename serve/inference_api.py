@@ -5,13 +5,10 @@ import joblib, pandas as pd, shap, json
 from pydantic import BaseModel
 from utils.request_helper import build_payload
 
-with open("config.json", "r") as f:
-    config = json.load(f)
-
-MODEL_VERSION = config["model_version"]
+MODEL_VERSION = "2024-wind-v1"
 app = FastAPI(title="HR Probability API")
 MODEL_PATH = "models/hr_model.pkl"
-model = joblib.load(config["model_path"])
+model = joblib.load("models/hr_model.pkl")
 explainer = shap.TreeExplainer(model)
 
 class RawPA(BaseModel):
