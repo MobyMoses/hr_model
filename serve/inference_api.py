@@ -5,10 +5,13 @@ import joblib, pandas as pd, shap, json
 from pydantic import BaseModel
 from utils.request_helper import build_payload
 
-MODEL_VERSION = "2024-wind-v1"
+with open("config.json", "r") as f:
+    config = json.load(f)
+
+MODEL_VERSION = config["model_version"]
 app = FastAPI(title="HR Probability API")
 MODEL_PATH = "models/hr_model.pkl"
-model = joblib.load("models/hr_model.pkl")
+model = joblib.load(config["model_path"])
 explainer = shap.TreeExplainer(model)
 
 class RawPA(BaseModel):
@@ -22,21 +25,15 @@ class RawPA(BaseModel):
     inning: int
     month: int
 
-with open("config.json", "r") as f:
-    config = json.load(f)
-
-MODEL_VERSION = config["model_version"]
-
-app = FastAPI()
-model = joblib.load(config["model_path"])
-
 @app.post("/predict")
 def predict(pa: RawPA):
     features = build_payload("models/hr_model.pkl", **pa.dict())
     proba = model.predict_proba(pd.DataFrame([features]))[:, 1][0]
     return {
     "hr_probability": float(proba),
-    "model_version": MODEL_VERSION}
+    "model_version": MODEL_VERSION
+}
+
 class RawPABatch(BaseModel):
     data: List[RawPA]
 
