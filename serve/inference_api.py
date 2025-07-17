@@ -1,7 +1,7 @@
 
 from typing import Literal, List, Dict, Any
 from fastapi import FastAPI
-import joblib, pandas as pd, shap
+import joblib, pandas as pd, shap, json
 from pydantic import BaseModel
 from utils.request_helper import build_payload
 
@@ -22,11 +22,20 @@ class RawPA(BaseModel):
     inning: int
     month: int
 
+with open("config.json", "r") as f:
+    config = json.load(f)
+
+MODEL_VERSION = config["model_version"]
+
+app = FastAPI()
+model = joblib.load(config["model_path"])
+
 @app.post("/predict")
 def predict(pa: RawPA):
     features = build_payload("models/hr_model.pkl", **pa.dict())
     proba = model.predict_proba(pd.DataFrame([features]))[:, 1][0]
-    return {"hr_probability": float(proba),
+    return {
+    "hr_probability": float(proba),
     "model_version": MODEL_VERSION}
 class RawPABatch(BaseModel):
     data: List[RawPA]
